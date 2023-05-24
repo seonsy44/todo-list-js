@@ -1,22 +1,15 @@
-export function createForm(Dict) {
-  function Form(id, option) {
-    if (Dict[id]) throw new Error(`id: ${id}는 이미 존재`);
+import { rawWidget } from "../baseWidget.js";
 
-    var el = document.createElement("form");
-    el.onsubmit = option.onSubmit;
+function _createForm(id, option) {
+  var el = document.createElement("form");
+  el.onsubmit = option.onSubmit;
 
-    Dict[id] = {
-      getEl: function () {
-        return el;
-      },
-      append: function (childControl) {
-        el.append(childControl.getEl());
-        return Dict[id];
-      },
-    };
-
-    return Dict[id];
-  }
-
-  return Form;
+  return {
+    id: id,
+    getEl: function () {
+      return el;
+    },
+  };
 }
+
+export var createForm = rawWidget(_createForm);

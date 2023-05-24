@@ -1,18 +1,15 @@
-export function createH1(Dict) {
-  function H1(id, option) {
-    if (Dict[id]) throw new Error(`id: ${id}는 이미 존재`);
+import { rawWidget } from "../baseWidget.js";
 
-    var el = document.createElement("h1");
-    el.textContent = option.textContent;
+function _createH1(id, option) {
+  var el = document.createElement("h1");
+  el.textContent = option.textContent;
 
-    Dict[id] = {
-      getEl: function () {
-        return el;
-      },
-    };
-
-    return Dict[id];
-  }
-
-  return H1;
+  return {
+    id: id,
+    getEl: function () {
+      return el;
+    },
+  };
 }
+
+export var createH1 = rawWidget(_createH1);

@@ -1,18 +1,15 @@
-export function createSpan(Dict) {
-  function Span(id, option) {
-    if (Dict[id]) throw new Error(`id: ${id}는 이미 존재`);
+import { rawWidget } from "../baseWidget.js";
 
-    var el = document.createElement("span");
-    el.textContent = option.label;
+function _createSpan(id, option) {
+  var el = document.createElement("span");
+  el.textContent = option.label;
 
-    Dict[id] = {
-      getEl: function () {
-        return el;
-      },
-    };
-
-    return Dict[id];
-  }
-
-  return Span;
+  return {
+    id: id,
+    getEl: function () {
+      return el;
+    },
+  };
 }
+
+export var createSpan = rawWidget(_createSpan);

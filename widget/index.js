@@ -10,27 +10,21 @@ import { createH1 } from "./raw/h1.js";
 import { createSpan } from "./raw/span.js";
 import { createTodo } from "./todo.js";
 import { createH3 } from "./raw/h3.js";
-
-var WidgetDict = {};
+import { getControl } from "./core.js";
 
 window.Widget = {
-  fragment: createFragment(WidgetDict),
-  button: createButton(WidgetDict),
-  ul: createUl(WidgetDict),
-  li: createLi(WidgetDict),
-  form: createForm(WidgetDict),
-  checkbox: createCheckbox(WidgetDict),
-  textInput: createTextInput(WidgetDict),
-  div: createDiv(WidgetDict),
-  span: createSpan(WidgetDict),
-  h1: createH1(WidgetDict),
-  h3: createH3(WidgetDict),
-  get: function (widgetId) {
-    return WidgetDict[widgetId];
-  },
-  del: function (widgetId) {
-    delete WidgetDict[widgetId];
-  },
+  fragment: createFragment,
+  button: createButton,
+  ul: createUl,
+  li: createLi,
+  form: createForm,
+  checkbox: createCheckbox,
+  textInput: createTextInput,
+  div: createDiv,
+  span: createSpan,
+  h1: createH1,
+  h3: createH3,
+  get: getControl,
 };
 
-window.Widget.todo = createTodo.call(window.Widget, WidgetDict);
+window.Widget.todo = createTodo.bind(window.Widget);

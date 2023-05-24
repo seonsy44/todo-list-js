@@ -1,5 +1,9 @@
 var WidgetDict = {};
 
+export function hasControl(id) {
+  return WidgetDict.hasOwnProperty(id);
+}
+
 export function getControl(id) {
   return WidgetDict[id];
 }

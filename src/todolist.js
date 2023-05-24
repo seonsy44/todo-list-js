@@ -2,46 +2,50 @@ import { getFormData } from "./utils.js";
 
 var todoList = [];
 
-function deleteTodoOnWidget(id) {
-  Widget.del(id);
-  Widget.del(`todoCheck-${id}`);
-  Widget.del(`todoSpan-${id}`);
-  Widget.del(`todoBtn-${id}`);
+function handleDelClick() {
+  todoList.splice(todoList.indexOf(this.todo), 1);
+  this.todo.done ? renderDoneList() : renderTodoList();
 }
 
-function renderList(listControl, condition) {
+function handleCheckChange(e) {
+  this.todo.done = e.target.checked;
+  renderTodoList();
+  renderDoneList();
+}
+
+function renderList(listControl, list) {
   listControl.innerHTML("");
 
-  todoList.filter(condition).forEach(function (todo) {
-    deleteTodoOnWidget(todo.id);
+  list.forEach(function (todo) {
+    if (Widget.get(todo.id)) Widget.get(todo.id).remove();
+
     listControl.append(
       Widget.todo(todo.id, {
         value: todo.contents,
         checked: todo.done,
-        onDelClick: function () {
-          todoList.splice(todoList.indexOf(todo), 1);
-          todo.done ? renderDoneList() : renderTodoList();
-        },
-        onCheckChange: function (e) {
-          todo.done = e.target.checked;
-          renderTodoList();
-          renderDoneList();
-        },
+        onDelClick: handleDelClick.bind({ todo: todo }),
+        onCheckChange: handleCheckChange.bind({ todo: todo }),
       })
     );
   });
 }
 
 function renderDoneList() {
-  renderList(Widget.get("doneList"), function (todo) {
-    return todo.done;
-  });
+  renderList(
+    Widget.get("doneList"),
+    todoList.filter(function (todo) {
+      return todo.done;
+    })
+  );
 }
 
 function renderTodoList() {
-  renderList(Widget.get("todoList"), function (todo) {
-    return !todo.done;
-  });
+  renderList(
+    Widget.get("todoList"),
+    todoList.filter(function (todo) {
+      return !todo.done;
+    })
+  );
 }
 
 export function handleTodoSubmit(e) {
@@ -60,5 +64,6 @@ export function handleTodoSubmit(e) {
   });
 
   renderTodoList();
-  Widget.get("todoInput").setValue("").focus();
+  Widget.get("todoInput").setValue("");
+  Widget.get("todoInput").focus();
 }

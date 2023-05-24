@@ -1,21 +1,14 @@
-export function createFragment(Dict) {
-  function Fragment(id, option) {
-    if (Dict[id]) throw new Error(`id: ${id}는 이미 존재`);
+import { rawWidget } from "../baseWidget.js";
 
-    var el = document.createDocumentFragment();
+function _createFragment(id, option) {
+  var el = document.createDocumentFragment();
 
-    Dict[id] = {
-      getEl: function () {
-        return el;
-      },
-      append: function (childControl) {
-        el.append(childControl.getEl());
-        return Dict[id];
-      },
-    };
-
-    return Dict[id];
-  }
-
-  return Fragment;
+  return {
+    id: id,
+    getEl: function () {
+      return el;
+    },
+  };
 }
+
+export var createFragment = rawWidget(_createFragment);

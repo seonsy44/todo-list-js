@@ -1,21 +1,14 @@
-export function createDiv(Dict) {
-  function Div(id, option) {
-    if (Dict[id]) throw new Error(`id: ${id}는 이미 존재`);
+import { rawWidget } from "../baseWidget.js";
 
-    var el = document.createElement("div");
+function _createDiv(id, option) {
+  var el = document.createElement("div");
 
-    Dict[id] = {
-      getEl: function () {
-        return el;
-      },
-      append: function (childControl) {
-        el.append(childControl.getEl());
-        return Dict[id];
-      },
-    };
-
-    return Dict[id];
-  }
-
-  return Div;
+  return {
+    id: id,
+    getEl: function () {
+      return el;
+    },
+  };
 }
+
+export var createDiv = rawWidget(_createDiv);
