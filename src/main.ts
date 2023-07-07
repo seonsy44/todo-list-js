@@ -1,8 +1,17 @@
 import { handleTodoSubmit } from "./todolist.js";
+import type { CompositeControl } from "./types/CompositeControl";
 import type { Control } from "./types/Control";
 
 type WidgetType<TElement> = (id: string, option?: Partial<TElement>) => Control<TElement>;
-declare var window: Window & {
+type CompositeWidgetType<TElement, TOption> = (id: string, option: TOption) => CompositeControl<TElement>
+type TodoOptionType = { 
+  checked: boolean;
+  onCheckchange?: ((e: Event) => any) | undefined;
+  todoContent: string;
+  onDelClick?: ((e: Event) => any) | undefined;
+}
+
+declare var window: {
   Widget: {
     fragment: WidgetType<DocumentFragment>;
     button: WidgetType<HTMLButtonElement>;
@@ -15,6 +24,7 @@ declare var window: Window & {
     h3: WidgetType<HTMLHeadingElement>;
     div: WidgetType<HTMLDivElement>;
     span: WidgetType<HTMLSpanElement>;
+    todo: CompositeWidgetType<HTMLLIElement, TodoOptionType>;
     get: (id: string) => Control<HTMLElement>;
   };
 };

@@ -1,7 +1,17 @@
+import { CompositeControl } from "./compositeControl.js";
 import { Control } from "./control.js";
+import { createButton, createCheckbox, createDiv, createForm, createFragment, createH1, createH3, createLi, createSpan, createTextInput, createUl, createTodo } from "./createControl.js";
 import { WidgetDict } from "./widgetDict.js";
 
 type WidgetType<TElement> = (id: string, option: Partial<TElement>) => Control<TElement>;
+type CompositeWidgetType<TElement, TOption> = (id: string, option: TOption) => CompositeControl<TElement>
+type TodoOptionType = { 
+  checked: boolean;
+  onCheckchange?: ((e: Event) => any) | undefined;
+  todoContent: string;
+  onDelClick?: ((e: Event) => any) | undefined;
+}
+
 declare var window: {
   Widget: {
     fragment: WidgetType<DocumentFragment>;
@@ -15,27 +25,23 @@ declare var window: {
     h3: WidgetType<HTMLHeadingElement>;
     div: WidgetType<HTMLDivElement>;
     span: WidgetType<HTMLSpanElement>;
+    todo: CompositeWidgetType<HTMLLIElement, TodoOptionType>;
     get: (id: string) => Control<HTMLElement>;
   };
 };
 
-function createControl<TElement>(tagName: keyof HTMLElementTagNameMap | "fragment", _option?: Partial<TElement>) {
-  return (id: string, option: Partial<TElement> = {}) => new Control(id, tagName, { ...option, ..._option });
-}
-
 window.Widget = {
-  fragment: createControl<DocumentFragment>("fragment"),
-  button: createControl<HTMLButtonElement>("button"),
-  ul: createControl<HTMLUListElement>("ul"),
-  li: createControl<HTMLLIElement>("li"),
-  form: createControl<HTMLFormElement>("form"),
-  checkbox: createControl<HTMLInputElement>("input", { type: "checkbox" }),
-  textInput: createControl<HTMLInputElement>("input", { type: "input" }),
-  h1: createControl<HTMLHeadingElement>("h1"),
-  h3: createControl<HTMLHeadingElement>("h3"),
-  div: createControl<HTMLDivElement>("div"),
-  span: createControl<HTMLSpanElement>("span"),
+  fragment: createFragment,
+  button: createButton,
+  ul: createUl,
+  li: createLi,
+  form: createForm,
+  checkbox: createCheckbox,
+  textInput: createTextInput,
+  h1: createH1,
+  h3: createH3,
+  div: createDiv,
+  span: createSpan,
+  todo: createTodo,
   get: (id: string) => WidgetDict.getControl(id),
 };
-
-window.Widget.todo = createTodo.bind(window.Widget);

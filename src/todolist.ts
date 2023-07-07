@@ -1,6 +1,40 @@
 import { getFormData } from "./utils.js";
+import type { CompositeControl } from "./types/CompositeControl.js";
+import type { Control } from "./types/Control.js";
 
-var todoList = [];
+type WidgetType<TElement> = (id: string, option?: Partial<TElement>) => Control<TElement>;
+type CompositeWidgetType<TElement, TOption> = (id: string, option: TOption) => CompositeControl<TElement>
+type TodoOptionType = { 
+  checked: boolean;
+  onCheckchange?: ((e: Event) => any) | undefined;
+  todoContent: string;
+  onDelClick?: ((e: Event) => any) | undefined;
+}
+
+declare var window: {
+  Widget: {
+    fragment: WidgetType<DocumentFragment>;
+    button: WidgetType<HTMLButtonElement>;
+    ul: WidgetType<HTMLUListElement>;
+    li: WidgetType<HTMLLIElement>;
+    form: WidgetType<HTMLFormElement>;
+    checkbox: WidgetType<HTMLInputElement>;
+    textInput: WidgetType<HTMLInputElement>;
+    h1: WidgetType<HTMLHeadingElement>;
+    h3: WidgetType<HTMLHeadingElement>;
+    div: WidgetType<HTMLDivElement>;
+    span: WidgetType<HTMLSpanElement>;
+    todo: CompositeWidgetType<HTMLLIElement, TodoOptionType>;
+    get: (id: string) => Control<HTMLElement>;
+  };
+};
+const { Widget } = window;
+
+const todoList: {
+    id: string,
+    contents: string,
+    done: boolean,
+  }[] = [];
 
 function handleDelClick() {
   todoList.splice(todoList.indexOf(this.todo), 1);
@@ -51,7 +85,7 @@ function renderTodoList() {
 export function handleTodoSubmit(e) {
   e.preventDefault();
 
-  var formData = getFormData(e.target);
+  const formData = getFormData(e.target);
   if (!formData.todoValue.length) {
     alert("todo를 입력해주세요.");
     return;
