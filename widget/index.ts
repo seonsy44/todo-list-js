@@ -7,7 +7,7 @@ type WidgetType<TElement> = (id: string, option: Partial<TElement>) => Control<T
 type CompositeWidgetType<TElement, TOption> = (id: string, option: TOption) => CompositeControl<TElement>
 type TodoOptionType = { 
   checked: boolean;
-  onCheckchange?: ((e: Event) => any) | undefined;
+  onCheckChange?: ((e: Event) => any) | undefined;
   todoContent: string;
   onDelClick?: ((e: Event) => any) | undefined;
 }

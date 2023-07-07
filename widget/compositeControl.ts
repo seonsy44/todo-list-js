@@ -1,23 +1,17 @@
 import { Control } from "./control";
+import { WidgetDict } from "./widgetDict";
 
 export class CompositeControl<THtmlElement> extends Control<THtmlElement> {
-  private children: Record<string, HTMLElement>
-
   constructor(id: string, tagName: keyof HTMLElementTagNameMap, option?: Partial<THtmlElement>) {
     super(id, tagName, option);
-
-    this.children = {}
   }
 
   add<TSubHtmlElement>(id:string, tagName: keyof HTMLElementTagNameMap, option: Partial<TSubHtmlElement>) {
-      const el = document.createElement(tagName);
-      Object.entries(option).forEach(([key, value]) => {
-        el[key] = value;
-      });
+    const childControl = new Control<TSubHtmlElement>(id, tagName, option)
+    WidgetDict.addControl(id, childControl);
 
-      this.el.append(el);
-      this.children[id] = el;
+    childControl.appended(this.el);
 
-      return this;
+    return this;
   }
 }

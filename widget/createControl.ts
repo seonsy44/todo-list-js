@@ -3,7 +3,7 @@ import { Control } from "./control";
 
 // 단일 control
 function createControl<TElement>(tagName: keyof HTMLElementTagNameMap | "fragment", _option?: Partial<TElement>) {
-    return (id: string, option: Partial<TElement> = {}) => new Control(id, tagName, { ...option, ..._option });
+    return (id: string, option: Partial<TElement> = {}) => new Control<TElement>(id, tagName, { ...option, ..._option });
 }
 
 export const createFragment = createControl<DocumentFragment>("fragment")
@@ -19,9 +19,9 @@ export const createDiv = createControl<HTMLDivElement>("div")
 export const createSpan = createControl<HTMLSpanElement>("span")
 
 // 합성 control
-export const createTodo = (id: string, option: {checked: boolean, onCheckchange?: (e: Event) => any, todoContent: string, onDelClick?: (e: Event) => any}) => {
+export const createTodo = (id: string, option: {checked: boolean, onCheckChange?: (e: Event) => any, todoContent: string, onDelClick?: (e: Event) => any}) => {
     return new CompositeControl<HTMLLIElement>(id, "li")
-        .add<HTMLInputElement>(`${id}-input`, "input", { type: "checkbox", checked: option.checked, onchange: option.onCheckchange })
+        .add<HTMLInputElement>(`${id}-input`, "input", { type: "checkbox", checked: option.checked, onchange: option.onCheckChange })
         .add<HTMLSpanElement>(`${id}-span`, "span", {textContent: option.todoContent})
         .add<HTMLButtonElement>(`${id}-button`, "button", {textContent: "삭제", type: "button", onclick: option.onDelClick})
 }

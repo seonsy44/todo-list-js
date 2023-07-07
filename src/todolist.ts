@@ -6,7 +6,7 @@ type WidgetType<TElement> = (id: string, option?: Partial<TElement>) => Control<
 type CompositeWidgetType<TElement, TOption> = (id: string, option: TOption) => CompositeControl<TElement>
 type TodoOptionType = { 
   checked: boolean;
-  onCheckchange?: ((e: Event) => any) | undefined;
+  onCheckChange?: ((e: Event) => any) | undefined;
   todoContent: string;
   onDelClick?: ((e: Event) => any) | undefined;
 }
@@ -55,7 +55,7 @@ function renderList(listControl, list) {
 
     listControl.append(
       Widget.todo(todo.id, {
-        value: todo.contents,
+        todoContent: todo.contents,
         checked: todo.done,
         onDelClick: handleDelClick.bind({ todo: todo }),
         onCheckChange: handleCheckChange.bind({ todo: todo }),
@@ -85,17 +85,20 @@ function renderTodoList() {
 export function handleTodoSubmit(e) {
   e.preventDefault();
 
-  const formData = getFormData(e.target);
-  if (!formData.todoValue.length) {
-    alert("todo를 입력해주세요.");
-    return;
-  }
+  const { todoValue } = getFormData(e.target);
 
-  todoList.push({
-    id: crypto.randomUUID(),
-    contents: formData.todoValue,
-    done: false,
-  });
+  if (typeof todoValue === "string") {
+    if (!todoValue.length) {
+      alert("todo를 입력해주세요.");
+      return;
+    }
+
+    todoList.push({
+      id: crypto.randomUUID(),
+      contents: todoValue,
+      done: false,
+    });
+  }
 
   renderTodoList();
   Widget.get("todoInput").setValue("");

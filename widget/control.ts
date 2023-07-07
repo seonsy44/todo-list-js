@@ -1,7 +1,6 @@
 import { WidgetDict } from "./widgetDict";
-
 export class Control<THtmlElement> {
-  private id: string;
+  id: string;
   protected el: HTMLElementTagNameMap[keyof HTMLElementTagNameMap] | DocumentFragment;
 
   constructor(id: string, tagName: keyof HTMLElementTagNameMap | "fragment", option?: Partial<THtmlElement>) {
@@ -36,5 +35,15 @@ export class Control<THtmlElement> {
     Object.entries(option).forEach(([key, value]) => {
       this.el[key] = value;
     });
+  }
+
+  focus() {
+    if(!(this.el instanceof DocumentFragment))
+      this.el.focus();
+  }
+
+  setValue(value: string) {
+    if(this.el instanceof HTMLInputElement || this.el instanceof HTMLButtonElement || this.el instanceof HTMLLIElement || this.el instanceof HTMLOptionElement)
+      this.el.value = value
   }
 }
